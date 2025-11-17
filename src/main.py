@@ -21,6 +21,7 @@ class App(tk.Tk):
         canvas_view = VCanvas(self)
         canvas_controller = CCanvas(canvas_view, canvas_model)
         canvas_view.set_controller(canvas_controller)
+        canvas_controller._update_canvas()
 
         canvas_view.pack(side=tk.TOP, fill=tk.X)
 

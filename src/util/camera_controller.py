@@ -1,6 +1,9 @@
 import cv2
 import threading
 import time
+import numpy.typing as npt
+
+from util.calibration_loader import CalibrationLoader
 
 class CameraController:
     def __init__(self):
@@ -12,6 +15,16 @@ class CameraController:
 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_dimensions[0])
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.capture_dimensions[1])
+
+        self.newcam_mtx, self.roi = cv2.getOptimalNewCameraMatrix(CalibrationLoader.cam_mtx, CalibrationLoader.dist,
+                                                                    (self.capture_dimensions[0],
+                                                                    self.capture_dimensions[1]), 1,
+                                                                    (self.capture_dimensions[0],
+                                                                    self.capture_dimensions[1]))
+        self.mapx, self.mapy = cv2.initUndistortRectifyMap(CalibrationLoader.cam_mtx, CalibrationLoader.dist, None,
+                                                        self.newcam_mtx,
+                                                        (self.capture_dimensions[0], self.capture_dimensions[1]),
+                                                        cv2.CV_16SC2)
 
         self.frame = None
         self.ret = False
@@ -27,14 +40,14 @@ class CameraController:
             with self.lock:
                 self.ret = ret
 
-                # undistorted = cv2.remap(frame, self.mapx, self.mapy, cv2.INTER_LINEAR)
-                # x, y, w_roi, h_roi = self.roi
-                # undistorted_cropped = undistorted[y:, x + 300:x + w_roi - 300]
-                self.frame = frame
+                undistorted = cv2.remap(frame, self.mapx, self.mapy, cv2.INTER_LINEAR)
+                x, y, w_roi, h_roi = self.roi
+                undistorted_cropped = undistorted[y:, x + 300:x + w_roi - 300]
+                self.frame = undistorted_cropped
             if not ret:
                 time.sleep(0.01)
     
-    def read(self):
+    def read(self) -> tuple[bool, npt.NDArray | None]:
         with self.lock:
             if self.frame is not None:
                 return self.ret, self.frame
