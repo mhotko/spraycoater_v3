@@ -1,6 +1,9 @@
-def main():
-    print("Hello from spraycoater-v3!")
+import tkinter as tk
 
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
 
 if __name__ == "__main__":
-    main()
+    app = App()
+    app.mainloop()
