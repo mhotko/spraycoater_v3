@@ -5,5 +5,5 @@ class App(tk.Tk):
         super().__init__()
 
 if __name__ == "__main__":
-    app = App()
+    app: tk.Tk = App()
     app.mainloop()
