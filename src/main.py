@@ -1,5 +1,11 @@
 from __future__ import annotations
+from os import environ
+from pathlib import Path
+from sys import base_prefix
 import tkinter as tk
+
+environ["TCL_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tcl8.6")
+environ["TK_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tk8.6")
 
 from controller.canvas_controller import CCanvas
 from model.canvas_model import MCanvas
