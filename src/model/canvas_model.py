@@ -5,6 +5,7 @@ import cv2
 class MCanvas():
     def __init__(self):
         self.camera_controller = CameraController()
+        self.converted_frame: ImageTk.PhotoImage | None = None
 
     def read_frame(self) -> ImageTk.PhotoImage | None:
         ret, frame = self.camera_controller.read()
@@ -13,5 +14,5 @@ class MCanvas():
         
         rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         img = Image.fromarray(rgb_image)
-        img_tk = ImageTk.PhotoImage(image=img)
-        return img_tk
+        self.converted_frame = ImageTk.PhotoImage(image=img)
+        return self.converted_frame

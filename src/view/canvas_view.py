@@ -46,3 +46,4 @@ class VCanvas(tk.Canvas):
             self.image_on_canvas = self.create_image(0, 0, anchor=tk.NW, image= img_tk)
         else:
             self.itemconfig(self.image_on_canvas, image=img_tk)
+            # print(img_tk)
