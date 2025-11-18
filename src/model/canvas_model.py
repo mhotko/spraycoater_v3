@@ -39,3 +39,6 @@ class MCanvas():
         if self.raw_frame is not None:
             
             self.raw_frame = self.draw_utility.draw(self.raw_frame, self.start_point, self.end_point)
+    
+    def is_resizing(self, click: Point) -> bool:
+        return self.draw_utility.is_resizeing(click)
