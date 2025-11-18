@@ -41,7 +41,7 @@ class Line:
             end_dist = min(start_dist + dash_length, line_len)
             start = self.start_point.get_point_np() + line_dir * start_dist
             end = self.start_point.get_point_np() + line_dir * end_dist
-            cv2.line(opencv_frame, tuple(start.astype(int)), tuple(end.astype(int)), self.color, self.thickness)
+            cv2.line(opencv_frame, tuple(start.astype(int)), tuple(end.astype(int)), self.color, self.thickness, lineType=cv2.LINE_AA)
 
 
 # class Rectangle:
