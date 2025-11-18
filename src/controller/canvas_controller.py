@@ -22,9 +22,6 @@ class CCanvas():
 
     def _on_canvas_drag(self, x: int, y: int):
         self.model.set_end_point(Point(x, y))
-
-    def _on_canvas_release(self, x: int, y: int):
-        pass
     
     def _update_canvas(self):
         self.model.read_frame()
