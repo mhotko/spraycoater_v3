@@ -4,7 +4,7 @@ import numpy as np
 @dataclass
 class CalibrationLoader:
     # savedir = "/home/ecat/Desktop/calibrations/"
-    savedir = "../../calibrations_v2/"
+    savedir = ".././calibrations_v2/"
     cam_mtx=np.load(savedir+'cam_mtx_3.npy')
     dist=np.load(savedir+'dist_3.npy')
     rvec = np.load(savedir + 'rvecs_3.npy')

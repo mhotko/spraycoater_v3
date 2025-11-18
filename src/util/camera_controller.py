@@ -21,10 +21,10 @@ class CameraController:
                                                                     self.capture_dimensions[1]), 1,
                                                                     (self.capture_dimensions[0],
                                                                     self.capture_dimensions[1]))
-        self.mapx, self.mapy = cv2.initUndistortRectifyMap(CalibrationLoader.cam_mtx, CalibrationLoader.dist, None,
+        self.mapx, self.mapy = cv2.initUndistortRectifyMap(CalibrationLoader.cam_mtx, CalibrationLoader.dist, None, # type: ignore
                                                         self.newcam_mtx,
                                                         (self.capture_dimensions[0], self.capture_dimensions[1]),
-                                                        cv2.CV_16SC2)
+                                                        cv2.CV_16SC2) # type: ignore
 
         self.frame = None
         self.ret = False
