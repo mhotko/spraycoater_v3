@@ -1,7 +1,11 @@
+from typing import cast, TYPE_CHECKING
 import tkinter as tk
 
-from controller.connection_controller import CConnection
+from util.base_mvc import BaseController, BaseView
 from util.connection_enum import ConnectionState
+
+if TYPE_CHECKING:
+    from controller.connection_controller import CConnection
 
 
 class ConnectedIndicator:
@@ -43,7 +47,7 @@ class ConnectedIndicator:
         self.canvas.itemconfig(self.light, fill=color)
 
 
-class VConection(tk.Frame):
+class VConection(tk.Frame, BaseView):
     def __init__(self, master: tk.Tk) -> None:
         super().__init__(master)
         self.parent = master
@@ -57,10 +61,7 @@ class VConection(tk.Frame):
             self.master, text="Arduino"
         )
 
-        self.controller: CConnection | None = None
+        self.controller: "CConnection | None" = None
 
-    def set_controller(self, controller: CConnection) -> None:
-        """
-        Sets the controller
-        """
-        self.controller = controller
+    def set_controller(self, controller: BaseController) -> None:
+        self.controller = cast("CConnection", controller)
