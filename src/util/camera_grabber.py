@@ -7,7 +7,7 @@ import numpy as np
 from util.calibration_loader import CalibrationLoader
 
 
-class CameraController:
+class CameraFrameGrabber:
     def __init__(self):
         self.capture_dimensions = (1280, 720)
         self.video_source = 0

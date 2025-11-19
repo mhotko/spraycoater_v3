@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from controller.connection_controller import CConnection
 from util.connection_enum import ConnectionState
 
 
@@ -55,3 +56,11 @@ class VCoonection(tk.Frame):
         self.arduino_indicator = ConnectedIndicator(
             self.master, text="Arduino"
         )
+
+        self.controller: CConnection | None = None
+
+    def set_controller(self, controller: CConnection) -> None:
+        """
+        Sets the controller
+        """
+        self.controller = controller
