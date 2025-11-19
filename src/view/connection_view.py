@@ -43,7 +43,7 @@ class ConnectedIndicator:
         self.canvas.itemconfig(self.light, fill=color)
 
 
-class VCoonection(tk.Frame):
+class VConection(tk.Frame):
     def __init__(self, master: tk.Tk) -> None:
         super().__init__(master)
         self.parent = master

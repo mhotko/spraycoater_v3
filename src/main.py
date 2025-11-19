@@ -8,7 +8,7 @@ from tkinter import font, Tk
 from controller.canvas_controller import CCanvas
 from model.canvas_model import MCanvas
 from view.canvas_view import VCanvas
-from view.connection_view import VCoonection
+from view.connection_view import VConection
 
 environ["TCL_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tcl8.6")
 environ["TK_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tk8.6")
@@ -31,7 +31,7 @@ class App(Tk):
 
         canvas_view.pack(side=tk.TOP, fill=tk.X)
 
-        connection_view = VCoonection(self)
+        connection_view = VConection(self)
 
         connection_view.pack()
 
