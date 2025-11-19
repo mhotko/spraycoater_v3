@@ -6,7 +6,9 @@ import tkinter as tk
 from tkinter import font, Tk
 
 from controller.canvas_controller import CCanvas
+from controller.connection_controller import CConnection
 from model.canvas_model import MCanvas
+from model.connection_model import MConnection
 from view.canvas_view import VCanvas
 from view.connection_view import VConection
 
@@ -23,6 +25,7 @@ class App(Tk):
         self.defaultFont = font.nametofont("TkDefaultFont")
         self.defaultFont.configure(family="Arial", size=12, weight=font.BOLD)
 
+        # CANVAS
         canvas_model = MCanvas()
         canvas_view = VCanvas(self)
         canvas_controller = CCanvas(canvas_view, canvas_model)
@@ -31,7 +34,11 @@ class App(Tk):
 
         canvas_view.pack(side=tk.TOP, fill=tk.X)
 
+        # CONNECTION
+        connection_model = MConnection()
         connection_view = VConection(self)
+        connection_controller = CConnection(connection_view, connection_model)
+        connection_view.set_controller(connection_controller)
 
         connection_view.pack()
 
