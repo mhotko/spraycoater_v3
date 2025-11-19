@@ -9,7 +9,7 @@ class SerialManager(ABC):
 
     @property
     @abstractmethod
-    def is_connected(self):
+    def is_connected(self) -> bool:
         pass
 
     def seek_comport(self) -> str:
