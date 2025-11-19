@@ -13,7 +13,7 @@ class ConnectedIndicator:
         self._colors: dict[ConnectionState, str] = {
             ConnectionState.CONNECTED: "#27ae60",
             ConnectionState.CONNECTING: "#f1c40f",
-            ConnectionState.DISCONNECTED: "#27ae60",
+            ConnectionState.DISCONNECTED: "#e74c3c",
         }
 
         self.canvas = tk.Canvas(parent, width=20, height=20, highlightthickness=0)
