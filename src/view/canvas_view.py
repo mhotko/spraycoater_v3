@@ -1,13 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 import tkinter as tk
 from PIL import ImageTk
+
+from util.base_mvc import BaseController, BaseView
 
 if TYPE_CHECKING:
     from controller.canvas_controller import CCanvas
 
 
-class VCanvas(tk.Canvas):
+class VCanvas(tk.Canvas, BaseView):
     def __init__(self, parent: tk.Tk, height: int = 645, width: int = 567):
         super().__init__(parent, cursor="crosshair")
 
@@ -20,13 +22,13 @@ class VCanvas(tk.Canvas):
         self.bind("<B1-Motion>", self._on_drag)
         self.image_on_canvas: int | None = None
 
-        self.controller: CCanvas | None = None
+        self.controller: "CCanvas | None" = None
 
-    def set_controller(self, controller: CCanvas) -> None:
+    def set_controller(self, controller: BaseController) -> None:
         """
         Sets the controller
         """
-        self.controller = controller
+        self.controller = cast("CCanvas", controller)
 
     def _on_click(self, event: tk.Event) -> None:
         if self.controller:

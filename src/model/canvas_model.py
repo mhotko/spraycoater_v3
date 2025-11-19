@@ -1,3 +1,4 @@
+from util.base_mvc import BaseModel
 from util.camera_grabber import CameraFrameGrabber
 from PIL import Image, ImageTk
 import cv2
@@ -6,7 +7,7 @@ import numpy.typing as npt
 from util.draw_utility import DrawHandler, Point
 
 
-class MCanvas:
+class MCanvas(BaseModel):
     def __init__(self):
         self.camera_controller = CameraFrameGrabber()
         self.raw_frame: npt.NDArray | None = None

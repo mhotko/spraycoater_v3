@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from util.base_mvc import BaseController
 from util.draw_utility import Point
 
 if TYPE_CHECKING:
@@ -7,8 +8,9 @@ if TYPE_CHECKING:
     from view.canvas_view import VCanvas
 
 
-class CCanvas:
-    def __init__(self, view: VCanvas, model: MCanvas):
+class CCanvas(BaseController):
+    def __init__(self, view: VCanvas, model: MCanvas) -> None:
+        super().__init__(view, model)
         self.view = view
         self.model = model
 
