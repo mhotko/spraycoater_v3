@@ -5,7 +5,8 @@ import numpy.typing as npt
 
 from util.draw_utility import DrawHandler, Point
 
-class MCanvas():
+
+class MCanvas:
     def __init__(self):
         self.camera_controller = CameraController()
         self.raw_frame: npt.NDArray | None = None
@@ -20,7 +21,7 @@ class MCanvas():
             return None
         self.raw_frame = frame.copy()
         self.draw()
-    
+
     def get_converted_frame(self):
         if self.raw_frame is None:
             return
@@ -28,7 +29,7 @@ class MCanvas():
         img = Image.fromarray(rgb_image)
         self.converted_frame = ImageTk.PhotoImage(image=img)
         return self.converted_frame
-    
+
     def set_start_point(self, start_point: Point):
         self.start_point = start_point
 
@@ -37,8 +38,9 @@ class MCanvas():
 
     def draw(self):
         if self.raw_frame is not None:
-            
-            self.raw_frame = self.draw_utility.draw(self.raw_frame, self.start_point, self.end_point)
-    
+            self.raw_frame = self.draw_utility.draw(
+                self.raw_frame, self.start_point, self.end_point
+            )
+
     def is_resizing(self, click: Point) -> bool:
         return self.draw_utility.is_resizeing(click)

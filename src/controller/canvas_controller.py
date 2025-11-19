@@ -1,12 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from util.draw_utility import Point
+
 if TYPE_CHECKING:
     from model.canvas_model import MCanvas
     from view.canvas_view import VCanvas
 
 
-class CCanvas():
+class CCanvas:
     def __init__(self, view: VCanvas, model: MCanvas):
         self.view = view
         self.model = model
@@ -18,11 +19,11 @@ class CCanvas():
             self.model.set_end_point(start_point)
         else:
             self.model.set_start_point(Point(x, y))
-            self.model.set_end_point(Point(x+1, y+1))
+            self.model.set_end_point(Point(x + 1, y + 1))
 
     def _on_canvas_drag(self, x: int, y: int):
         self.model.set_end_point(Point(x, y))
-    
+
     def _update_canvas(self):
         self.model.read_frame()
 
