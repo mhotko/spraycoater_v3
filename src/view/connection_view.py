@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from view.connection_enum import ConnectionState
+from util.connection_enum import ConnectionState
 
 
 class ConnectedIndicator:
