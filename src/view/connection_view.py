@@ -23,9 +23,7 @@ class ConnectedIndicator:
             2, 2, 18, 18, fill=self._colors[self._state]
         )
 
-        self.status_label = tk.Label(
-            parent, text=self._text, font=("Arial", 12, "bold")
-        )
+        self.status_label = tk.Label(parent, text=self._text)
         self.status_label.pack(side="left", padx=(0, 5), pady=10)
 
     def connected(self):
@@ -47,3 +45,13 @@ class ConnectedIndicator:
 class VCoonection(tk.Frame):
     def __init__(self, master: tk.Tk) -> None:
         super().__init__(master)
+        self.parent = master
+        self.pump_indicator = ConnectedIndicator(self.master, text="Pump")
+
+        self.gantry_indicator = ConnectedIndicator(self.master, text="Gantry")
+
+        self.camera_indicator = ConnectedIndicator(self.master, text="Camera")
+
+        self.arduino_indicator = ConnectedIndicator(
+            self.master, text="Arduino"
+        )
