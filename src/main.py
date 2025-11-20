@@ -4,6 +4,7 @@ from pathlib import Path
 from sys import base_prefix
 import tkinter as tk
 from tkinter import font, Tk
+from menu_bar import MenuBar
 from util.threading_events import stop_event
 
 from controller.canvas_controller import CCanvas
@@ -27,6 +28,9 @@ class App(Tk):
         self.defaultFont.configure(family="Arial", size=12, weight=font.BOLD)
 
         self.protocol("WM_DELETE_WINDOW", self.window_close)
+
+        self.menubar = MenuBar(self)
+        self.config(menu=self.menubar)
 
         # CANVAS
         canvas_model = MCanvas()
