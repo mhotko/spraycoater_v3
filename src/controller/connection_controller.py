@@ -63,10 +63,7 @@ class CConnection(BaseController):
         try:
             while True:
                 serial_type, state = self.connection_queue.get_nowait()
-                print(serial_type, state)
                 if serial_type == SerialType.GANTRY:
-                    print("Updating Gantry indicator")
-
                     if state == ConnectionState.CONNECTED:
                         self.view.gantry_indicator.connected()
                     elif state == ConnectionState.CONNECTING:
@@ -75,7 +72,6 @@ class CConnection(BaseController):
                         self.view.gantry_indicator.disconnected()
                     self.view.gantry_indicator.update()
                 elif serial_type == SerialType.CAMERA:
-                    print("Updating camera indicator")
                     if state == ConnectionState.CONNECTED:
                         self.view.camera_indicator.connected()
                     elif state == ConnectionState.CONNECTING:
