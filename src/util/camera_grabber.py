@@ -40,6 +40,7 @@ class CameraFrameGrabber:
         self.ret = False
         self.running = True
         self.lock = threading.Lock()
+        self.connected = True if self.cap.isOpened() else False
 
         self.thread = threading.Thread(target=self._update, daemon=True)
         self.thread.start()

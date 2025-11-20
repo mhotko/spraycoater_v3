@@ -4,6 +4,7 @@ from typing import cast, TYPE_CHECKING
 from util.base_mvc import BaseController, BaseModel, BaseView
 from util.connection_enum import ConnectionState
 from util.serial_type_enum import SerialType
+import time
 
 if TYPE_CHECKING:
     from view.connection_view import VConection
@@ -25,16 +26,47 @@ class CConnection(BaseController):
 
     def start_connection_process(self):
         Thread(target=self._gantry_worker, daemon=True).start()
+        Thread(target=self._camera_worker, daemon=True).start()
 
     def _gantry_worker(self):
         result = self.model.connect_gantry()
         self.connection_queue.put(result)
 
+        while True:
+            self.connection_queue.put(
+                (
+                    SerialType.GANTRY,
+                    ConnectionState.CONNECTED
+                    if self.model.gantry_manager.is_connected
+                    else ConnectionState.DISCONNECTED,
+                )
+            )
+            time.sleep(1)
+
+    def _camera_worker(self):
+        first_run = True
+        while True:
+            if not first_run:
+                result = self.model.camera_connected
+                self.connection_queue.put(
+                    (
+                        SerialType.CAMERA,
+                        ConnectionState.CONNECTED
+                        if result
+                        else ConnectionState.DISCONNECTED,
+                    )
+                )
+            time.sleep(1)
+            first_run = False
+
     def poll_connection_queue(self):
         try:
             while True:
                 serial_type, state = self.connection_queue.get_nowait()
+                print(serial_type, state)
                 if serial_type == SerialType.GANTRY:
+                    print("Updating Gantry indicator")
+
                     if state == ConnectionState.CONNECTED:
                         self.view.gantry_indicator.connected()
                     elif state == ConnectionState.CONNECTING:
@@ -42,6 +74,15 @@ class CConnection(BaseController):
                     else:
                         self.view.gantry_indicator.disconnected()
                     self.view.gantry_indicator.update()
+                elif serial_type == SerialType.CAMERA:
+                    print("Updating camera indicator")
+                    if state == ConnectionState.CONNECTED:
+                        self.view.camera_indicator.connected()
+                    elif state == ConnectionState.CONNECTING:
+                        self.view.camera_indicator.connecting()
+                    else:
+                        self.view.camera_indicator.disconnected()
+                    self.view.camera_indicator.update()
         except queue.Empty:
             pass
         self.view.after(100, self.poll_connection_queue)

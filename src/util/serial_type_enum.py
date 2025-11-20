@@ -5,3 +5,4 @@ class SerialType(Enum):
     GANTRY = auto()
     ARDUINO = auto()
     PUMP = auto()
+    CAMERA = auto()

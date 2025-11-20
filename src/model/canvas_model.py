@@ -6,17 +6,28 @@ import numpy.typing as npt
 
 from util.draw_utility import DrawHandler, Point
 
+from util.event_type_enum import EventEnum
+from util.event_bus_service import event_bus
+
 
 class MCanvas(BaseModel):
-    def __init__(self):
+    def __init__(self) -> None:
+        super().__init__()
+
         self.camera_controller = CameraFrameGrabber()
         self.raw_frame: npt.NDArray | None = None
         self.converted_frame: ImageTk.PhotoImage | None = None
         self.start_point: Point = Point(-1, -1)
         self.end_point: Point = Point(-1, -1)
         self.draw_utility = DrawHandler()
+        self.event_bus = event_bus
+        self.event_bus.register(self)
 
     def read_frame(self) -> ImageTk.PhotoImage | None:
+        self.event_bus.publish(
+            EventEnum.CAMERA_CONNECTION_STATE,
+            data=self.camera_controller.cap.isOpened(),
+        )
         ret, frame = self.camera_controller.read()
         if not ret or frame is None:
             return None
