@@ -3,10 +3,10 @@ from util.serial_managers.serial_manager_base import SerialManager
 
 
 class GantryManager(SerialManager):
-    def __init__(self, serial_number=""):
-        super().__init__(serial_number)
+    def __init__(self, comport=""):
+        super().__init__(comport)
         self.connection: printcore.printcore | None = None
-        self.comport = self.seek_comport()
+        self.comport = comport
         self.baudrate = 115200
 
     @property
