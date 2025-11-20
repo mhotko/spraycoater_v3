@@ -13,12 +13,14 @@ class CameraFrameGrabber:
         self.video_source = 0
         self.capture_flag_windows = cv2.CAP_DSHOW
 
-        self.cap = cv2.VideoCapture(
-            self.video_source, self.capture_flag_windows
-        )
+        self.cap: cv2.VideoCapture | None = None
 
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_dimensions[0])
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.capture_dimensions[1])
+        # self.cap = cv2.VideoCapture(
+        #     self.video_source, self.capture_flag_windows
+        # )
+
+        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_dimensions[0])
+        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.capture_dimensions[1])
 
         self.newcam_mtx, self.roi = cv2.getOptimalNewCameraMatrix(
             CalibrationLoader.cam_mtx,
@@ -40,14 +42,14 @@ class CameraFrameGrabber:
         self.ret = False
         self.running = True
         self.lock = threading.Lock()
-        self.connected = True if self.cap.isOpened() else False
+        self.connected = False
 
         self.thread = threading.Thread(target=self._update, daemon=True)
         self.thread.start()
 
     def _update(self):
         while self.running:
-            if self.cap.isOpened():
+            if self.cap is not None and self.cap.isOpened():
                 ret, frame = self.cap.read()
                 with self.lock:
                     self.ret = ret
@@ -69,9 +71,20 @@ class CameraFrameGrabber:
 
     def read(self) -> tuple[bool, npt.NDArray | None]:
         with self.lock:
-            if not self.cap.isOpened():
+            if self.cap is None or not self.cap.isOpened():
                 return True, self.frame
             if self.frame is not None:
                 return self.ret, self.frame
             else:
                 return False, None
+
+    def set_new_source(self, source: int):
+        self.video_source = source
+        if self.cap is not None:
+            self.cap.release()
+        self.cap = cv2.VideoCapture(
+            self.video_source, self.capture_flag_windows
+        )
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_dimensions[0])
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.capture_dimensions[1])
+        self.connected = True if self.cap.isOpened() else False

@@ -48,7 +48,7 @@ class App(Tk):
         self.db_manager = DBManager(str(self.db_file))
 
         # CANVAS
-        canvas_model = MCanvas()
+        canvas_model = MCanvas(self.db_manager)
         canvas_view = VCanvas(self)
         canvas_controller = CCanvas(canvas_view, canvas_model)
         canvas_view.set_controller(canvas_controller)

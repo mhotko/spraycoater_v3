@@ -28,7 +28,6 @@ class CCanvas(BaseController):
 
     def _update_canvas(self):
         self.model.read_frame()
-
         frame = self.model.get_converted_frame()
         if frame is not None:
             self.view.update_image(frame)
