@@ -12,7 +12,7 @@ class ConnectedIndicator:
     def __init__(self, parent: tk.Misc, text: str = "Default") -> None:
         self._parent = parent
         self._text = text
-        self._state = ConnectionState.DISCONNECTED
+        self._state = ConnectionState.CONNECTING
 
         self._colors: dict[ConnectionState, str] = {
             ConnectionState.CONNECTED: "#27ae60",
@@ -65,3 +65,15 @@ class VConection(tk.Frame, BaseView):
 
     def set_controller(self, controller: BaseController) -> None:
         self.controller = cast("CConnection", controller)
+
+    def update_gantry_indicator(self, gantry_state: ConnectionState) -> None:
+        if self.controller is None:
+            return
+
+        if gantry_state == ConnectionState.CONNECTED:
+            self.gantry_indicator.connected()
+        elif gantry_state == ConnectionState.CONNECTING:
+            self.gantry_indicator.connecting()
+        else:
+            self.gantry_indicator.disconnected()
+        self.gantry_indicator.update()
