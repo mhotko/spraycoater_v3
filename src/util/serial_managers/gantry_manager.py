@@ -22,3 +22,6 @@ class GantryManager(SerialManager):
                 raise ConnectionError("Failed to connect to Gantry.")
         else:
             raise ConnectionError("Gantry is already connected.")
+
+    def set_comport(self, comport: str):
+        self.comport = comport

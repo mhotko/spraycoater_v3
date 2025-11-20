@@ -28,10 +28,12 @@ class CConnection(BaseController):
         Thread(target=self._gantry_worker, daemon=True).start()
         Thread(target=self._camera_worker, daemon=True).start()
 
-    def _gantry_worker(self):
+    def _attempt_gantry_connection(self):
         result = self.model.connect_gantry()
         self.connection_queue.put(result)
 
+    def _gantry_worker(self):
+        self._attempt_gantry_connection()
         while not stop_event.is_set():
             self.connection_queue.put(
                 (
@@ -41,6 +43,9 @@ class CConnection(BaseController):
                     else ConnectionState.DISCONNECTED,
                 )
             )
+            if not self.model.gantry_manager.is_connected:
+                self._attempt_gantry_connection()
+
             stop_event.wait(1)
 
     def _camera_worker(self):

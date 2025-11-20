@@ -57,7 +57,7 @@ class App(Tk):
         canvas_view.pack(side=tk.TOP, fill=tk.X)
 
         # CONNECTION
-        connection_model = MConnection()
+        connection_model = MConnection(self.db_manager)
         connection_view = VConection(self)
         connection_controller = CConnection(connection_view, connection_model)
         connection_view.set_controller(connection_controller)

@@ -58,4 +58,6 @@ class CDeviceSettings(BaseController):
         self.model.set("arduino_port", arduino_port)
         self.model.set("camera_source", camera_source)
 
+        self.event_bus.publish(EventEnum.DEVICE_SETTINGS_SAVED)
+
         self.view.withdraw()

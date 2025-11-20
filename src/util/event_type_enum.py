@@ -21,3 +21,4 @@ class EventEnum(Enum):
     T_0 = auto()
     OPEN_SETTINGS = auto()
     OPEN_DEVICE_SETTINGS = auto()
+    DEVICE_SETTINGS_SAVED = auto()
