@@ -1,6 +1,10 @@
 from printrun import printcore
 from util.serial_managers.serial_manager_base import SerialManager
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class GantryManager(SerialManager):
     def __init__(self, comport=""):
@@ -19,9 +23,14 @@ class GantryManager(SerialManager):
         if not self.is_connected:
             self.connection = printcore.printcore(self.comport, self.baudrate)
             if not self.is_connected:
-                raise ConnectionError("Failed to connect to Gantry.")
+                logger.error("Failed to connect to Gantry.")
         else:
-            raise ConnectionError("Gantry is already connected.")
+            if self.connection is not None:
+                self.connection.disconnect()
+                self.connection = None
+            self.connection = printcore.printcore(self.comport, self.baudrate)
+            if not self.is_connected:
+                logger.error("Failed to connect to Gantry.")
 
     def set_comport(self, comport: str):
         self.comport = comport

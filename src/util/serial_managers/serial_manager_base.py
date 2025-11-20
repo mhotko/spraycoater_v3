@@ -10,3 +10,11 @@ class SerialManager(ABC):
     @abstractmethod
     def is_connected(self) -> bool:
         pass
+
+    @abstractmethod
+    def connect(self):
+        pass
+
+    @abstractmethod
+    def set_comport(self, comport: str):
+        pass

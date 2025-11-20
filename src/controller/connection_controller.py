@@ -6,6 +6,10 @@ from util.connection_enum import ConnectionState
 from util.serial_type_enum import SerialType
 from util.threading_events import stop_event
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 if TYPE_CHECKING:
     from view.connection_view import VConection
     from model.connection_model import MConnection
@@ -27,10 +31,35 @@ class CConnection(BaseController):
     def start_connection_process(self):
         Thread(target=self._gantry_worker, daemon=True).start()
         Thread(target=self._camera_worker, daemon=True).start()
+        Thread(target=self._arduino_worker, daemon=True).start()
 
     def _attempt_gantry_connection(self):
         result = self.model.connect_gantry()
         self.connection_queue.put(result)
+
+    def _attempt_arduino_connection(self):
+        result = self.model.connect_arduino()
+        self.connection_queue.put(result)
+
+    def _arduino_worker(self):
+        self._attempt_arduino_connection()
+        while not stop_event.is_set():
+            self.connection_queue.put(
+                (
+                    SerialType.ARDUINO,
+                    ConnectionState.CONNECTED
+                    if self.model.arduino_manager.is_connected
+                    else ConnectionState.DISCONNECTED,
+                )
+            )
+            logger.info(
+                f"Arduino connected: {self.model.arduino_manager.comport}"
+            )
+
+            if not self.model.arduino_manager.is_connected:
+                self._attempt_arduino_connection()
+
+            stop_event.wait(1)
 
     def _gantry_worker(self):
         self._attempt_gantry_connection()
@@ -84,6 +113,14 @@ class CConnection(BaseController):
                     else:
                         self.view.camera_indicator.disconnected()
                     self.view.camera_indicator.update()
+                elif serial_type == SerialType.ARDUINO:
+                    if state == ConnectionState.CONNECTED:
+                        self.view.arduino_indicator.connected()
+                    elif state == ConnectionState.CONNECTING:
+                        self.view.arduino_indicator.connecting()
+                    else:
+                        self.view.arduino_indicator.disconnected()
+                    self.view.arduino_indicator.update()
         except queue.Empty:
             pass
         self.view.after(100, self.poll_connection_queue)

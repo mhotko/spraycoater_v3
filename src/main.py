@@ -17,8 +17,9 @@ from model.connection_model import MConnection
 from view.canvas_view import VCanvas
 from view.connection_view import VConection
 from view.device_settings_view import VDeviceSettings
+import logging
 
-
+logger = logging.getLogger(__name__)
 environ["TCL_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tcl8.6")
 environ["TK_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tk8.6")
 
