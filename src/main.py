@@ -4,7 +4,9 @@ from pathlib import Path
 from sys import base_prefix
 import tkinter as tk
 from tkinter import font, Tk
+from controller.device_settings_controller import CDeviceSettings
 from menu_bar import MenuBar
+from model.device_settings_model import MDeviceSettings
 from util.threading_events import stop_event
 
 from controller.canvas_controller import CCanvas
@@ -13,6 +15,7 @@ from model.canvas_model import MCanvas
 from model.connection_model import MConnection
 from view.canvas_view import VCanvas
 from view.connection_view import VConection
+from view.device_settings_view import VDeviceSettings
 
 environ["TCL_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tcl8.6")
 environ["TK_LIBRARY"] = str(Path(base_prefix) / "tcl" / "tk8.6")
@@ -49,8 +52,15 @@ class App(Tk):
 
         connection_view.pack()
 
+        # DEVICE SETTINGS
+        device_settings_model = MDeviceSettings()
+        device_settings_view = VDeviceSettings(self)
+        device_settings_controller = CDeviceSettings(
+            device_settings_view, device_settings_model
+        )
+        device_settings_view.set_controller(device_settings_controller)
+
     def window_close(self):
-        print("Closing application...")
         stop_event.set()
         self.destroy()
 

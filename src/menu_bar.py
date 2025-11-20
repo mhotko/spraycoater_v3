@@ -120,3 +120,9 @@ class MenuBar(tk.Menu):
             label="Open settings",
             command=lambda: self.event_bus.publish(EventEnum.OPEN_SETTINGS),
         )
+        self._settings_parent_item.add_command(
+            label="Open device settings",
+            command=lambda: self.event_bus.publish(
+                EventEnum.OPEN_DEVICE_SETTINGS
+            ),
+        )
