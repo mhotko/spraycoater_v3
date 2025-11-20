@@ -4,6 +4,7 @@ from pathlib import Path
 from sys import base_prefix
 import tkinter as tk
 from tkinter import font, Tk
+from util.threading_events import stop_event
 
 from controller.canvas_controller import CCanvas
 from controller.connection_controller import CConnection
@@ -25,6 +26,8 @@ class App(Tk):
         self.defaultFont = font.nametofont("TkDefaultFont")
         self.defaultFont.configure(family="Arial", size=12, weight=font.BOLD)
 
+        self.protocol("WM_DELETE_WINDOW", self.window_close)
+
         # CANVAS
         canvas_model = MCanvas()
         canvas_view = VCanvas(self)
@@ -41,6 +44,11 @@ class App(Tk):
         connection_view.set_controller(connection_controller)
 
         connection_view.pack()
+
+    def window_close(self):
+        print("Closing application...")
+        stop_event.set()
+        self.destroy()
 
 
 if __name__ == "__main__":

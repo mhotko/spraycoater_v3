@@ -4,7 +4,7 @@ from typing import cast, TYPE_CHECKING
 from util.base_mvc import BaseController, BaseModel, BaseView
 from util.connection_enum import ConnectionState
 from util.serial_type_enum import SerialType
-import time
+from util.threading_events import stop_event
 
 if TYPE_CHECKING:
     from view.connection_view import VConection
@@ -32,7 +32,7 @@ class CConnection(BaseController):
         result = self.model.connect_gantry()
         self.connection_queue.put(result)
 
-        while True:
+        while not stop_event.is_set():
             self.connection_queue.put(
                 (
                     SerialType.GANTRY,
@@ -41,11 +41,11 @@ class CConnection(BaseController):
                     else ConnectionState.DISCONNECTED,
                 )
             )
-            time.sleep(1)
+            stop_event.wait(1)
 
     def _camera_worker(self):
         first_run = True
-        while True:
+        while not stop_event.is_set():
             if not first_run:
                 result = self.model.camera_connected
                 self.connection_queue.put(
@@ -56,7 +56,7 @@ class CConnection(BaseController):
                         else ConnectionState.DISCONNECTED,
                     )
                 )
-            time.sleep(1)
+            stop_event.wait(1)
             first_run = False
 
     def poll_connection_queue(self):
