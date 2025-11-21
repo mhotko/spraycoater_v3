@@ -2,6 +2,8 @@ from util.db_manager import DBManager
 from util.base_mvc import BaseModel
 from serial.tools import list_ports
 from dataclasses import dataclass
+from util.event_bus_service import event_bus
+from util.event_type_enum import EventEnum
 
 
 @dataclass
@@ -22,6 +24,9 @@ class MDeviceSettings(BaseModel):
             camera_source=0,
         )
 
+        self.event_bus = event_bus
+        self.event_bus.register(self)
+
         self.db_manager = db_manager
         self._init_table()
 
@@ -33,6 +38,12 @@ class MDeviceSettings(BaseModel):
         );
         """
         self.db_manager.execute_query(create_table_query)
+        self.set_if_not_exists("gantry_port", "")
+        self.set_if_not_exists("pump_port", "")
+        self.set_if_not_exists("arduino_port", "")
+        self.set_if_not_exists("camera_source", "0")
+        self.event_bus.publish(EventEnum.CAMERA_SOURCE_CHANGED)
+        self.event_bus.publish(EventEnum.DEVICE_SETTINGS_SAVED)
 
     def set(self, key: str, value: str):
         self.db_manager.execute_query(
@@ -40,6 +51,15 @@ class MDeviceSettings(BaseModel):
             INSERT OR IGNORE INTO device_settings(key, value)
             VALUES (?, ?)
             ON CONFLICT(key) DO UPDATE SET value=excluded.value
+        """,
+            (key, value),
+        )
+
+    def set_if_not_exists(self, key: str, value: str):
+        self.db_manager.execute_query(
+            """
+            INSERT OR IGNORE INTO device_settings(key, value)
+            VALUES (?, ?)
         """,
             (key, value),
         )

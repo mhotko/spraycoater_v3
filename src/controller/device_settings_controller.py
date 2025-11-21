@@ -59,5 +59,6 @@ class CDeviceSettings(BaseController):
         self.model.set("camera_source", camera_source)
 
         self.event_bus.publish(EventEnum.DEVICE_SETTINGS_SAVED)
+        self.event_bus.publish(EventEnum.CAMERA_SOURCE_CHANGED)
 
         self.view.withdraw()

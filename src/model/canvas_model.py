@@ -16,7 +16,7 @@ class MCanvas(BaseModel):
         super().__init__()
         self.db_manager = db_manager
         self.camera_controller = CameraFrameGrabber()
-        self.set_camera_source()
+        # self.set_camera_source()
         self.raw_frame: npt.NDArray | None = None
         self.converted_frame: ImageTk.PhotoImage | None = None
         self.start_point: Point = Point(-1, -1)
@@ -42,7 +42,7 @@ class MCanvas(BaseModel):
         source = self.get("camera_source", default="0")
         self.camera_controller.set_new_source(int(source))
 
-    @event_bus.subscribe(EventEnum.DEVICE_SETTINGS_SAVED)
+    @event_bus.subscribe(EventEnum.CAMERA_SOURCE_CHANGED)
     def on_device_settings_saved(self):
         self.set_camera_source()
 

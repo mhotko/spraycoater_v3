@@ -19,8 +19,8 @@ class MConnection(BaseModel):
         self.bus = event_bus
         self.bus.register(self)
 
-        self.set_gantry_comport()
-        self.set_arduino_comport()
+        # self.set_gantry_comport()
+        # self.set_arduino_comport()
 
     def connect_gantry(self) -> tuple[SerialType, ConnectionState]:
         self.gantry_manager.connect()

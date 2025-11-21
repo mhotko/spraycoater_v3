@@ -22,3 +22,4 @@ class EventEnum(Enum):
     OPEN_SETTINGS = auto()
     OPEN_DEVICE_SETTINGS = auto()
     DEVICE_SETTINGS_SAVED = auto()
+    CAMERA_SOURCE_CHANGED = auto()
